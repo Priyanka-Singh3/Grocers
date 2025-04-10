@@ -58,11 +58,33 @@ export const AppContextProvider = ({children}) => {
         toast.success("Item removed from cart");
         setCartItems(cartData);
     }
+
+    //get cart items count
+    const getCartCount = () => {
+        let count = 0;
+        for(let item in cartItems) {
+            count += cartItems[item];
+        }
+        return count;
+    }
+
+    //get cart items total price
+    const getCartAmount = () => {
+        let totalAmount = 0;
+        for(const items in cartItems) {
+            let itemInfo = products.find((product) => product._id === items);
+            if(cartItems[items] > 0 ) {
+                totalAmount += itemInfo.offerPrice * cartItems[items];
+            }
+        }
+        return Math.floor(totalAmount * 100) / 100;
+    }
+
     useEffect(() => {
         fecthProducts();
     }, []) 
 
-    const value = {navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, searchQuery, setSearchQuery};
+    const value = {navigate, user, setUser, isSeller, setIsSeller, showUserLogin, setShowUserLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount};
 
     return (
         <AppContext.Provider value={value} >
