@@ -32,7 +32,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: mern-client:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/mern-client:latest
         env:
           VITE_CURRENCY: ${{ secrets.VITE_CURRENCY }}
 
@@ -43,7 +43,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: mern-server:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/mern-server:latest
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
