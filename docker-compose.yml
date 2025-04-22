@@ -1,0 +1,34 @@
+version: "3.8"  # You can remove this line if you want to follow the warning
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "5001:4000"  # Expose server on port 5001
+    volumes:
+      - ./server:/app  # Mount server folder for development
+    environment:
+      - NODE_ENV=development  # Set NODE_ENV to development for dev mode
+    depends_on:
+      - mongo  # Ensure mongo is up before starting the server
+
+  client:
+    build: ./client
+    ports:
+      - "3000:80"  # Expose client app on port 3000
+    volumes:
+      - ./client:/app  # Mount client folder for development
+    environment:
+      - NODE_ENV=development  # Set NODE_ENV to development for dev mode
+    depends_on:
+      - server  # Ensure the server is up before starting the client
+
+  mongo:
+    image: mongo  # Use official mongo image
+    ports:
+      - "27017:27017"  # Expose MongoDB on port 27017
+    volumes:
+      - mongo-data:/data/db  # Use named volume for persistent data
+
+volumes:
+  mongo-data:  # Define volume for MongoDB data persistence

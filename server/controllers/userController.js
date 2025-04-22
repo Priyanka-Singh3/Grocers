@@ -37,7 +37,7 @@ export const register = async (req, res) => {
 // Login user : /api/user/login
 export const login = async (req, res) => {
     try {
-        const {email, body} = req.body
+        const {email, password} = req.body
         if(!email || !password) {
             return res.json({success: false, message: "Email and password are required"})
         }
