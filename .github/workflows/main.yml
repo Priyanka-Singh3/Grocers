@@ -3,35 +3,50 @@ name: Build and Push Docker Images
 on:
   push:
     branches:
-      - main
+      - main  # You can change this to the branch you are working with
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # Step 1: Checkout the code from the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
+      # Step 2: Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push client image
+      # Step 3: Set up Docker Buildx (optional but recommended for advanced builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 4: Build and push the client Docker image
+      - name: Build and push Docker image (client)
         uses: docker/build-push-action@v5
         with:
           context: ./client
+          file: ./client/Dockerfile
           push: true
-          tags: prisingh3/mern-client:latest
+          tags: prisingh3/grocers-client:latest
+        env:
+          VITE_CURRENCY: ${{ secrets.VITE_CURRENCY }}
 
-      - name: Build and push server image
+      # Step 5: Build and push the server Docker image
+      - name: Build and push Docker image (server)
         uses: docker/build-push-action@v5
         with:
           context: ./server
+          file: ./server/Dockerfile
           push: true
-          tags: prisingh3/mern-server:latest
+          tags: prisingh3/grocers-server:latest
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          SELLER_EMAIL: ${{ secrets.SELLER_EMAIL }}
+          SELLER_PASSWORD: ${{ secrets.SELLER_PASSWORD }}
